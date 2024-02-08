@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('SendBird Implementation'),
+          title:  Text('SendBird Implementation', style: TextStyle(color: Colors.grey.shade500),),
         ),
         body: SafeArea(
             child: PageStateChecker(

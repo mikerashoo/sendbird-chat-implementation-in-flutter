@@ -27,7 +27,21 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Dark Theme Demo',
       theme: ThemeData.dark().copyWith( 
-        colorScheme: ColorScheme.dark(background: Color(0xFFD9D9D9), secondary:Colors.pinkAccent), 
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.blueGrey.shade900,
+        ),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.blue,
+        ),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+        ),
+        colorScheme: const ColorScheme.dark(background: Color(0xFFD9D9D9), secondary:Colors.pinkAccent), 
       ),
       home: const HomeScreen(),
     );
