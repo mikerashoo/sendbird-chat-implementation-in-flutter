@@ -23,14 +23,16 @@ class _PageStateCheckerState extends State<PageStateChecker> {
                 : widget.hasError
                     ? Center(
                         child: Column(
+                           crossAxisAlignment: CrossAxisAlignment.center,
+                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
                               "Something went wrong ",
-                              style: TextStyle(color: Colors.amberAccent),
+                              style: TextStyle(color: Colors.redAccent),
                             ),
                             ElevatedButton(
                                 onPressed: widget.onTryAgain,
-                                child: const Text("Try Again"))
+                                child:  Text("Try Again", style: TextStyle(color: Theme.of(context).colorScheme.secondary)))
                           ],
                         ),
                       )

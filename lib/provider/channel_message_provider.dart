@@ -59,29 +59,15 @@ class SendBirdChannelProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> sendMessage(String messageToSend) async {
+  Future<void> insertMessages(List<BaseMessage> messages) async {
     try {
-      bool result = false;
-      openChannel.sendUserMessageWithText(
-        messageToSend,
-        handler: (message, e) {
-          if (e == null) {
-            print("Message sent: $message");
-            messageList.add(message);
-            notifyListeners();
-            result = true;
-          } else {
-            // TODO: handle error
-            print("Errror sending message: $e");
-            result = false;
-          }
-        },
-      );
-      return result;
-      // Use message to display the message before it is sent to the server.
-    } catch (e) {
-      print("error $e");
-      return false;
+     
+       messageList.insertAll(0, messages);
+       
+              hasPrevious = query.hasNext;
+              notifyListeners();
+    } catch (e) { 
+      print("Error adding previous messages $e");
     }
   }
 

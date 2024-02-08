@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:send_bird_chat_example/provider/channel_message_provider.dart'; 
+import 'package:send_bird_chat_example/provider/channel_message_provider.dart';
 import 'package:send_bird_chat_example/widgets/chat-feature-widgets/message_sender.dart';
 import 'package:send_bird_chat_example/widgets/chat-feature-widgets/other_user_message_card.dart';
 import 'package:send_bird_chat_example/widgets/chat-feature-widgets/user_message_card.dart';
@@ -19,30 +19,29 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final itemScrollController = ItemScrollController();
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       setupChannel();
     });
   }
 
-   void _addMessage(BaseMessage message) {
-       final provider =
+  void _addMessage(BaseMessage message) {
+    final provider =
         Provider.of<SendBirdChannelProvider>(context, listen: false);
-        provider.addMessage(message);
-   
-      Future.delayed(
-        const Duration(milliseconds: 100),
-        () => _scroll(),
-      ); 
+    provider.addMessage(message);
+
+    Future.delayed(
+      const Duration(milliseconds: 100),
+      () => _scroll(),
+    );
   }
 
-
-
   void _scroll() async {
-        final provider = Provider.of<SendBirdChannelProvider>(context, listen: false);
+    final provider =
+        Provider.of<SendBirdChannelProvider>(context, listen: false);
 
-      final messageList = provider.messageList;
+    final messageList = provider.messageList;
     if (messageList.length <= 1) return;
 
     while (!itemScrollController.isAttached) {
@@ -94,6 +93,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 onTryAgain: setupChannel,
                 content: Column(
                   children: [
+                    sendBirdChatProvider.hasPrevious
+                        ? _previousButton(sendBirdChatProvider)
+                        : Container(),
                     Expanded(
                         child: sendBirdChatProvider.messageList.isNotEmpty
                             ? ScrollablePositionedList.builder(
@@ -127,10 +129,39 @@ class _ChatScreenState extends State<ChatScreen> {
                                 },
                               )
                             : Container()),
-                     MessageSender(onAdd: _addMessage)
+                    MessageSender(onAdd: _addMessage)
                   ],
                 )),
           ));
     });
+  }
+
+  Widget _previousButton(SendBirdChannelProvider sendBirdChatProvider) {
+    return Container(
+      width: 32,
+      height: 32.0,
+      
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+      color: Theme.of(context).colorScheme.secondary.withOpacity(0.8),
+
+      ),
+      child: IconButton(
+        icon: const Icon(Icons.expand_less, size: 16.0),
+        color: Colors.white,
+        onPressed: () async {
+          if (sendBirdChatProvider.query.hasNext &&
+              !sendBirdChatProvider.query.isLoading) {
+            final messages = await sendBirdChatProvider.query.next();
+            sendBirdChatProvider.insertMessages(messages);
+            itemScrollController.scrollTo(
+              index: 0,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.fastOutSlowIn,
+            );
+          }
+        },
+      ),
+    );
   }
 }

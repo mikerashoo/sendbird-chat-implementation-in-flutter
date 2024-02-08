@@ -65,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: PageStateChecker(
                 isLoading: isLoading,
                 hasError: hasError,
+                onTryAgain: setUpChannel,
                 content: SizedBox(
                   // color: Colors.indigoAccent,
                   width: double.infinity,
